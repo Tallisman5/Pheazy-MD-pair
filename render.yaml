@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: whatsapp-pairing
+    runtime: docker
+    port: 3000
+    healthCheckPath: /
