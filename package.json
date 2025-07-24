@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-pairing",
+  "version": "1.0.0",
+  "description": "WhatsApp Session ID Pairing System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "latest",
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
