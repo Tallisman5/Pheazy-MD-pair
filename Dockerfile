@@ -1,22 +1,30 @@
-# Use official Node.js image
+# Use official Node.js image matching Baileys requirements
 FROM node:18-alpine
 
-# Create app directory
+# Create and set working directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
+# Copy package files FIRST for better caching
 COPY package*.json ./
 
-RUN npm install
+# Install dependencies (clean cache to reduce image size)
+RUN npm install --production && \
+    npm cache clean --force
 
-# Bundle app source
+# Copy all other files
 COPY . .
 
-# Build the app (if needed)
-# RUN npm run build
+# Create necessary runtime files
+RUN touch auth_info.json && \
+    chmod 666 auth_info.json && \
+    mkdir -p public
 
-# Expose the port
+# Expose port
 EXPOSE 3000
 
-# Start the app
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
+
+# Run the server
 CMD ["node", "server.js"]
