@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Session ID Pairing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #25D366;
+            --secondary-color: #128C7E;
+            --glow-color: rgba(37, 211, 102, 0.6);
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a192f, #172a45);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(37, 211, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(18, 140, 126, 0.1) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--glow-color);
+            animation: glow-pulse 2s infinite alternate;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(18, 140, 126, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(18, 140, 126, 0.6);
+        }
+        
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        #pairingCode {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 15px 0;
+            text-shadow: 0 0 10px var(--glow-color);
+            animation: glow-pulse 1.5s infinite alternate;
+        }
+        
+        .instructions {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        
+        @keyframes glow-pulse {
+            0% { text-shadow: 0 0 5px var(--glow-color); }
+            100% { text-shadow: 0 0 15px var(--glow-color); }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid var(--primary-color);
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color) }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="floating">Pheazy-MD Session ID Pairing</h2>
+        <p class="typing-text">Enter your WhatsApp number in international format (without + or 00)</p>
+        <input type="text" id="whatsappNumber" placeholder="e.g., 2349017117779">
+        <button id="generateBtn">Generate Pairing Code</button>
+        <div id="result">
+            <h3>Your Pairing Code:</h3>
+            <p id="pairingCode"></p>
+            <p class="instructions">Check your WhatsApp for a "trying to link a device?" notification and use this code.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const number = document.getElementById('whatsappNumber').value.trim();
+            
+            if (!number || !/^\d{10,15}$/.test(number)) {
+                alert('Please enter a valid WhatsApp number in international format (without + or 00)');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/request-pairing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ number }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('pairingCode').textContent = data.code;
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.style.display = 'block';
+                    
+                    // Add animation to the result
+                    resultDiv.style.animation = 'none';
+                    setTimeout(() => {
+                        resultDiv.style.animation = 'fadeIn 0.5s ease-out';
+                    }, 10);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate pairing code. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
